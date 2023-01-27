@@ -22,11 +22,21 @@ icedCoffee is a programming language created to be as simple and powerful as a c
 
 ## Examples
 
+### Hello World
+
+| javaScript | icedCoffee |
+| ---------- | ---------- |
+| `console.log(“Hello world!”)`|`print(“Hello world!”)`|
+|            |            |
+|            |            |
+|            |            |
+
 ### Variable Types
 
 | javaScript | icedCoffee |
 | ---------- | ---------- |
-| Header     | Title      |
+|            |            |
+|            |            |
 
 ### Variable Types
 
