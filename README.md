@@ -28,12 +28,12 @@ print("Hello world!")
 ```
 
 ### Arithmetic
-Addition: `5 + 3`
-Subtraction: `37 - 5`
-Multiplication: `17 * 3`
-Division: `80 / 10`
-Exponent: `7^3`
-Modulus: `50 % 4`
+Addition: `5 + 3`\
+Subtraction: `37 - 5`\
+Multiplication: `17 * 3`\
+Division: `80 / 10`\
+Exponent: `7^3`\
+Modulus: `50 % 4`\
 
 ### Variable Declaration
 ```
