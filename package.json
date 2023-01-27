@@ -1,0 +1,25 @@
+{
+  "name": "icedcoffee",
+  "version": "1.0.0",
+  "description": "A compiler for icedCoffee",
+  "main": "icedCoffee.js",
+  "type": "module",
+  "scripts": {
+    "test": "c8 mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/azabloud/icedCoffee.git"
+  },
+  "keywords": [
+    "compiler",
+    "icedCoffee",
+    "homework"
+  ],
+  "author": "Adam Zabloudil",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/azabloud/icedCoffee/issues"
+  },
+  "homepage": "https://github.com/azabloud/icedCoffee#readme"
+}
