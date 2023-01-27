@@ -23,34 +23,78 @@ icedCoffee is a programming language created to be as simple and powerful as a c
 ## Examples
 
 ### Hello World
+```
+print("Hello world!")
+```
 
-| javaScript | icedCoffee |
-| ---------- | ---------- |
-| `console.log(“Hello world!”)`|`print(“Hello world!”)`|
-|            |            |
-|            |            |
-|            |            |
+### Arithmetic
+Addition: `5 + 3`
+Subtraction: `37 - 5`
+Multiplication: `17 * 3`
+Division: `80 / 10`
+Exponent: `7^3`
+Modulus: `50 % 4`
 
-### Variable Types
-
-| javaScript | icedCoffee |
-| ---------- | ---------- |
-|            |            |
-|            |            |
-
-### Variable Types
-
-### Variable Assignment
+### Variable Declaration
+```
+int x = 15
+double q = 47.26
+string y = "hello"
+bool z = true
+array[int] j = [5, 2, 6]
+```
 
 ### Function Declaration
+```
+func adder(x, y) -> int {
+    return x + y
+}
+
+func isTrue(x) -> bool {
+    if x == true {
+        return true
+    } else {
+        return false
+    }
+}
+
+func printHello() -> void {
+    print("Hello!")
+}
+```
 
 ### If Statements
+```
+if x == 27 {
+    return true
+} else if x == 13 {
+    return false
+} else {
+    x += 1
+}
+```
 
 ### Loops
+```
+while x < 50 {
+    print("Less!")
+}
 
-### Classes
+for val in y {
+    print(val)
+}
+```
 
 ### Comments
+```
+## Single line comment
+
+### 
+multi
+line
+comment
+###
+```
 
 ## About the author
 
