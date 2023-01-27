@@ -40,6 +40,17 @@ Exponent: `7^3`
 \
 Modulus: `50 % 4`
 
+### Operators
+```
+x && y
+x || y
+x < y
+x > y
+x <= y
+x >= y
+x != y
+```
+
 ### Variable Declaration
 ```
 int x = 15
@@ -99,6 +110,16 @@ multi
 line
 comment
 ###
+```
+
+### Fibonacci
+```
+func fibonacci(n) -> int {
+    if n <= 1 {
+        return n
+    }
+    return fibonacci(n-1) + fibonacci(n-2)
+}
 ```
 
 ## About the author
