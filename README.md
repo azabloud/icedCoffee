@@ -18,7 +18,7 @@ icedCoffee is a programming language created to be as simple and powerful as a c
 - Functions
 - Single line comment with ##
 - Multi-line comment with ###
-- .iced file extention
+- .icedCoffee file extention
 
 ## Examples
 

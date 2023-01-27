@@ -1,0 +1,7 @@
+if x == 27 {
+    return true
+} else if x == 13 {
+    return false
+} else {
+    x += 1
+}

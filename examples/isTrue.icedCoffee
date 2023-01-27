@@ -1,0 +1,7 @@
+func isTrue(x) -> bool {
+    if x == true {
+        return true
+    } else {
+        return false
+    }
+}
