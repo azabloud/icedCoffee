@@ -1,4 +1,4 @@
-![icedCoffee](icedCoffeeLogo.png)
+![icedCoffee](/docs/icedCoffeeLogo.png)
 
 # icedCoffee
 
