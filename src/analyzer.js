@@ -13,7 +13,12 @@ function error(message, node) {
 const icedCoffeeGrammar = ohm.grammar(fs.readFileSync("src/icedCoffee.ohm"));
 
 export default function analyze(sourceCode) {
+  const analyzer = icedCoffeeGrammar.createSemantics().addOperation("rep", {
+    Program(body) {
+      return new core.Program(body.rep());
+    },
+  });
+
   const match = icedCoffeeGrammar.match(sourceCode);
   if (!match.succeeded()) error(match.message);
-  console.log("You're good!");
 }
