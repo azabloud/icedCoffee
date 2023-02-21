@@ -1,11 +1,15 @@
 icedCoffee {
-  Program   = Statement+
-  Statement = let id "=" Exp ";"                      -- vardec
-            | function id "(" Params ")" "=" Exp ";"  -- fundec
-            | id "=" Exp ";"                          -- assign
-            | print Exp ";"                           -- print
+  Program   = Statement*
+  Statement = Type id "=" Exp                         -- vardec
+            | func id "(" Params ")" "->" Type Block  -- fundec
+            | return Exp?          		  			        -- return
+            | id ("=" | "+=" | "-=") Exp		          -- assign
+            | print "(" Exp ")"			                  -- print
             | while Exp Block                         -- while
-  Block     = "{" Statement* "}"
+            | for id in id Block					            -- for
+            | if Exp Block (else if Exp Block)*
+              (else Block)?               	  		    -- if
+  Block     = "{" Statement+ "}"
 
   Exp       = ("-" | "!") Exp7                        -- unary
             | Exp1 "?" Exp1 ":" Exp                   -- ternary
@@ -20,28 +24,58 @@ icedCoffee {
             | Exp5
   Exp5      = Exp5 ("*" | "/" | "%") Exp6             -- binary
             | Exp6
-  Exp6      = Exp7 "**" Exp6                          -- binary
+  Exp6      = Exp7 "^" Exp6                           -- binary
             | Exp7
   Exp7      = num
             | true
             | false
             | Call
+            | stringlit
+            | Array
             | id                                      -- id
             | "(" Exp ")"                             -- parens
 
   Call      = id "(" Args ")"
   Params    = ListOf<id, ",">
   Args      = ListOf<Exp, ",">
+  Array     = "[" ListOf<Args, ","> "]"
 
   let       = "let" ~idchar
-  function  = "function" ~idchar
+  func  	  = "func" ~idchar
   while     = "while" ~idchar
   true      = "true" ~idchar
   false     = "false" ~idchar
   print     = "print" ~idchar
-  keyword   = let | function | while | true | false
+  bool      = "bool" ~idchar
+  int       = "int" ~idchar
+  double    = "double" ~idchar
+  string    = "string" ~idchar
+  array     = "array" ~idchar
+  for		    = "for" ~idchar
+  in		    = "in" ~idchar
+  void		  = "void" ~idchar
+  if		    = "if" ~idchar
+  else		  = "else" ~idchar
+  return    = "return" ~idchar
+  
+  Type      = primitive
+  			    | array "[" primitive "]" 				        -- array
+  keyword   = let | func | while | true | false
+  			    | print | bool | int | double | string
+            | array | for | in | void | if | else 
+            | return
+  stringlit =  "\"" (char | "\'")* "\""
+  char      =  escape
+            |  ~"\\" ~"\"" ~"'" ~"\n" any
+  primitive =  bool | int | double | string | void
+            
+            
+  escape    =  "\\\\"
   num       = digit+ ("." digit+)? (("E" | "e") ("+" | "-")? digit+)?
   id        = ~keyword letter idchar*
   idchar    = letter | digit | "_"
-  space    += "//" (~"\n" any)*                       -- comment
+  newline   = "\n"+
+  space     += comment
+  comment   = "###" (~"###" any)* "###"               -- multiLine
+    		    | "##" (~"\n" any)*       	              -- singleLine
 }
