@@ -18,50 +18,37 @@ export default function analyze(sourceCode) {
       return new core.Program(body.children.map((s) => s.rep()));
     },
     Statement_vardec(_let, id, _eq, initializer) {
-      // Analyze the initializer *before* adding the variable to the context,
-      // because we don't want the variable to come into scope until after
-      // the declaration. That is, "let x=x;" should be an error (unless x
-      // was already defined in an outer scope.)
       const initializerRep = initializer.rep();
       const variable = new core.Variable(id.sourceString, false);
-      context.add(id.sourceString, variable, id);
       return new core.VariableDeclaration(variable, initializerRep);
     },
-    Statement_fundec(
-      _fun,
-      id,
-      _open,
-      params,
-      _close,
-      _equals,
-      body,
-      _semicolon
-    ) {
-      params = params.asIteration().children;
-      const fun = new core.Function(id.sourceString, params.length, true);
-      // Add the function to the context before analyzing the body, because
-      // we want to allow functions to be recursive
-      context.add(id.sourceString, fun, id);
-      context = new Context(context);
-      const paramsRep = params.map((p) => {
-        let variable = new core.Variable(p.sourceString, true);
-        context.add(p.sourceString, variable, p);
-        return variable;
-      });
-      const bodyRep = body.rep();
-      context = context.parent;
-      return new core.FunctionDeclaration(fun, paramsRep, bodyRep);
+    Statement_fundec(_func, _id, _open, params, _close, _arrow, _type, body) {
+      return new core.FunctionDeclaration(
+        params.asIteration().rep(),
+        body.rep()
+      );
     },
     Statement_assign(id, _eq, expression) {
       const target = id.rep();
-      check(!target.readOnly, `${target.name} is read only`, id);
-      return new core.Assignment(target, expression.rep());
+      return new core.AssignmentStatement(target, expression.rep());
     },
     Statement_print(_print, _left, argument, _right) {
       return new core.PrintStatement(argument.rep());
     },
+    Statement_return(_return, exp) {
+      return new core.ReturnStatement(exp.rep());
+    },
     Statement_while(_while, test, body) {
       return new core.WhileStatement(test.rep(), body.rep());
+    },
+    Statement_if(_if1, exp1, body1, _else1, _if2, exp2, body2, _else2, body3) {
+      return new core.IfStatement(
+        exp1.rep(),
+        body1.rep(),
+        exp2.rep(),
+        body2.rep(),
+        body3.rep()
+      );
     },
     Block(_open, body, _close) {
       return body.rep();
@@ -97,22 +84,14 @@ export default function analyze(sourceCode) {
     Exp7_parens(_open, expression, _close) {
       return expression.rep();
     },
-    Call(callee, left, args, _right) {
-      const fun = context.get(callee.sourceString, core.Function, callee);
-      const argsRep = args.asIteration().rep();
-      check(
-        argsRep.length === fun.paramCount,
-        `Expected ${fun.paramCount} arg(s), found ${argsRep.length}`,
-        left
-      );
-      return new core.Call(fun, argsRep);
+    Call(callee, _left, args, _right) {
+      return new core.Call(callee.sourceString, args.asIteration().rep());
     },
     stringlit(_left, text, _right) {
       return new core.StringLiteral(text.sourceString);
     },
-    id(_first, _rest) {
-      // Designed to get here only for ids in expressions
-      return context.get(this.sourceString, core.Variable, this);
+    id(_one, _two) {
+      return this.sourceString;
     },
     true(_) {
       return true;
@@ -122,6 +101,9 @@ export default function analyze(sourceCode) {
     },
     num(_whole, _point, _fraction, _e, _sign, _exponent) {
       return Number(this.sourceString);
+    },
+    _terminal() {
+      return this.sourceString;
     },
     _iter(...children) {
       return children.map((child) => child.rep());

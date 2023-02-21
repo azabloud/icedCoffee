@@ -34,10 +34,37 @@ export class IfStatement {
   }
 }
 
+export class WhileStatement {
+  constructor(test, consequent) {
+    this.test = test;
+    this.consequent = consequent;
+  }
+}
+
+export class ReturnStatement {
+  constructor(expression) {
+    this.expression = expression;
+  }
+}
+
 export class BinaryExpression {
   constructor(op, left, right) {
     this.left = left;
     this.right = right;
+  }
+}
+
+export class FunctionDeclaration {
+  constructor(params, body) {
+    this.params = params;
+    this.body = body;
+  }
+}
+
+export class Call {
+  constructor(callee, args) {
+    this.callee = callee;
+    this.args = args;
   }
 }
 
