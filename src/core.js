@@ -1,32 +1,32 @@
 import util from "util";
 
-class Program {
+export class Program {
   constructor(statements) {
     this.statements = statements;
   }
 }
 
-class PrintStatement {
+export class PrintStatement {
   constructor(argument) {
     this.argument = argument;
   }
 }
 
-class VariableDeclaration {
+export class VariableDeclaration {
   constructor(variable, initializer) {
     this.variable = variable;
     this.initializer = initializer;
   }
 }
 
-class AssignmentStatement {
+export class AssignmentStatement {
   constructor(target, source) {
     this.target = target;
     this.source = source;
   }
 }
 
-class IfStatement {
+export class IfStatement {
   constructor(test, consequent, alternate) {
     this.test = test;
     this.consequent = consequent;
@@ -34,10 +34,16 @@ class IfStatement {
   }
 }
 
-class BinaryExpression {
+export class BinaryExpression {
   constructor(op, left, right) {
     this.left = left;
     this.right = right;
+  }
+}
+
+export class StringLiteral {
+  constructor(contents) {
+    this.contents = contents;
   }
 }
 
