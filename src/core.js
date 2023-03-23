@@ -19,6 +19,31 @@ export class VariableDeclaration {
   }
 }
 
+export class Variable {
+  constructor(id, type) {
+    this.id = id;
+    this.type = type;
+  }
+}
+
+export class Type {
+  static BOOL = new Type("bool");
+  static INT = new Type("int");
+  static DOUBLE = new Type("double");
+  static STRING = new Type("string");
+  static VOID = new Type("void");
+  constructor(description) {
+    this.description = description;
+  }
+}
+
+export class ArrayType extends Type {
+  constructor(baseType) {
+    super(`array[${baseType.description}]`);
+    this.baseType = baseType;
+  }
+}
+
 export class AssignmentStatement {
   constructor(target, source) {
     this.target = target;
@@ -41,6 +66,13 @@ export class WhileStatement {
   }
 }
 
+export class ForStatement {
+  constructor(iterable, consequent) {
+    this.iterable = iterable;
+    this.consequent = consequent;
+  }
+}
+
 export class ReturnStatement {
   constructor(expression) {
     this.expression = expression;
@@ -48,9 +80,35 @@ export class ReturnStatement {
 }
 
 export class BinaryExpression {
-  constructor(op, left, right) {
+  constructor(op, left, right, type) {
     this.left = left;
     this.right = right;
+    this.type = type;
+  }
+}
+
+export class UnaryExpression {
+  constructor(op, operand, type) {
+    this.op = op;
+    this.operand = operand;
+    this.type = type;
+  }
+}
+
+export class TernaryExpression {
+  constructor(test, consequent, alternate) {
+    this.test = test;
+    this.consequent = consequent;
+    this.alternate = alternate;
+    this.type = consequent.type;
+  }
+}
+
+export class Function {
+  constructor(name, type, params) {
+    this.name = name;
+    this.type = type;
+    this.params = params;
   }
 }
 
