@@ -92,13 +92,22 @@ if x == 27 {
 
 ### Loops
 ```
+int x = 30
 while x < 50 {
     print("Less!")
+    x = x + 1
 }
 
+int y = 5
 for val in y {
     print(val)
 }
+
+array[int] z = [3,6,4,2]
+for val in z {
+    print(val)
+}
+
 ```
 
 ### Comments
@@ -122,9 +131,29 @@ func fibonacci(n) -> int {
 }
 ```
 
-## About the author
+### Error Types
+
+- Referencing an undeclared id
+- Adding/subtracting non-numbers
+- Conditional not using bool
+- Iterating a var that isn't an int or array in 'for in' loop
+- Returning value in a void function
+- No return value in non-void funciton
+- Passing the wrong amount of arguments
+- Using return outside of a function
+
+
+## Developer Bio
 
 The icedCoffee language was developed by Adam Zabloudil for a project in Languages and Automata II, a Computer Science course at Loyola Marymount University.
+
+## GH Pages:
+
+https://azabloud.github.io/icedCoffee/
+
+## GH Repo
+
+https://github.com/azabloud/icedCoffee
 
 ###### Logo Credit
 
