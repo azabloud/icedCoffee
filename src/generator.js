@@ -1,8 +1,3 @@
-// CODE GENERATOR
-//
-// Invoke generate(program) with the program node to get back the JavaScript
-// translation as a string.
-
 import { IfStatement, Type, ArrayType } from "./core.js";
 
 export default function generate(program) {
@@ -13,8 +8,6 @@ export default function generate(program) {
   }
 
   const generators = {
-    // Key idea: when generating an expression, just return the JS string; when
-    // generating a statement, write lines of translated JS to the output array.
     Program(p) {
       gen(p.statements);
     },

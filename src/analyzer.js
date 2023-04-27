@@ -115,7 +115,6 @@ export default function analyze(sourceCode) {
       return new core.VariableDeclaration(variable, initializerRep);
     },
     Statement_fundec(_func, id, _open, params, _close, _arrow, type, body) {
-      //const paramReps = params.asIteration().children;
       const paramReps = params.asIteration().children.map((p) => {
         const [paramType, paramId] = p.children;
         return new core.Variable(paramType.rep());
