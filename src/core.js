@@ -45,16 +45,18 @@ export class ArrayType extends Type {
 }
 
 export class AssignmentStatement {
-  constructor(target, source) {
+  constructor(target, eq, source) {
     this.target = target;
+    this.eq = eq;
     this.source = source;
   }
 }
 
 export class IfStatement {
-  constructor(test, consequent, alternate) {
+  constructor(test, consequent, elseIfParts, alternate) {
     this.test = test;
     this.consequent = consequent;
+    this.elseIfParts = elseIfParts;
     this.alternate = alternate;
   }
 }
@@ -67,8 +69,9 @@ export class WhileStatement {
 }
 
 export class ForStatement {
-  constructor(iterable, consequent) {
+  constructor(iterable, collection, consequent) {
     this.iterable = iterable;
+    this.collection = collection;
     this.consequent = consequent;
   }
 }
@@ -81,6 +84,7 @@ export class ReturnStatement {
 
 export class BinaryExpression {
   constructor(op, left, right, type) {
+    this.op = op;
     this.left = left;
     this.right = right;
     this.type = type;
@@ -105,15 +109,17 @@ export class TernaryExpression {
 }
 
 export class Function {
-  constructor(name, type, params) {
+  constructor(name, type, paramsLength, params) {
     this.name = name;
     this.type = type;
+    this.paramsLength = paramsLength;
     this.params = params;
   }
 }
 
 export class FunctionDeclaration {
-  constructor(params, body) {
+  constructor(id, params, body) {
+    this.id = id;
     this.params = params;
     this.body = body;
   }
@@ -129,6 +135,13 @@ export class Call {
 export class StringLiteral {
   constructor(contents) {
     this.contents = contents;
+  }
+}
+
+export class ArrayAccess {
+  constructor(array, index) {
+    this.array = array;
+    this.index = index;
   }
 }
 

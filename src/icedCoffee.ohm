@@ -32,6 +32,7 @@ icedCoffee {
             | Call
             | stringlit
             | Array
+            | id "[" Exp "]"                          -- arrayAccess
             | id                                      -- id
             | "(" Exp ")"                             -- parens
 

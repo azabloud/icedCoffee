@@ -72,19 +72,32 @@ function checkInFunction(context, at) {
 }
 
 class Context {
-  constructor({ parent = null, locals = new Map(), function: f = null }) {
-    Object.assign(this, { parent, locals, function: f });
+  constructor({
+    parent = null,
+    locals = new Map(),
+    function: f = null,
+    params = [],
+  }) {
+    Object.assign(this, { parent, locals, function: f, params });
   }
   set(name, entity) {
     this.locals.set(name, entity);
   }
-  get(name) {
-    const entity = this.locals.get(name) || this.parent?.get(name);
+  lookup(name) {
+    const entity =
+      this.locals.get(name) ||
+      this.parent?.lookup(name) ||
+      this.params.find((p) => p.name === name);
     checkIdDeclared(entity, name);
     return entity;
   }
   newChildContext(props) {
-    return new Context({ ...this, ...props, parent: this, locals: new Map() });
+    return new Context({
+      ...this,
+      ...props,
+      parent: this,
+      locals: new Map(),
+    });
   }
 }
 
@@ -102,7 +115,11 @@ export default function analyze(sourceCode) {
       return new core.VariableDeclaration(variable, initializerRep);
     },
     Statement_fundec(_func, id, _open, params, _close, _arrow, type, body) {
-      const paramReps = params.asIteration().children;
+      //const paramReps = params.asIteration().children;
+      const paramReps = params.asIteration().children.map((p) => {
+        const [paramType, paramId] = p.children;
+        return new core.Variable(paramType.rep());
+      });
       const func = new core.Function(
         id.sourceString,
         type.rep(),
@@ -110,14 +127,14 @@ export default function analyze(sourceCode) {
       );
       context.set(id.sourceString, func);
       context = context.newChildContext({ inLoop: false, function: func });
-      for (const p of paramReps) context.set(p.name, p);
+      for (const p of paramReps) context.set(p.id, p);
       const b = body.rep();
       context = context.parent;
-      return new core.FunctionDeclaration(paramReps, b);
+      return new core.FunctionDeclaration(id.sourceString, paramReps, b);
     },
-    Statement_assign(id, _eq, expression) {
+    Statement_assign(id, eq, expression) {
       const target = id.rep();
-      return new core.AssignmentStatement(target, expression.rep());
+      return new core.AssignmentStatement(target, eq.rep(), expression.rep());
     },
     Statement_print(_print, _left, argument, _right) {
       return new core.PrintStatement(argument.rep());
@@ -137,17 +154,44 @@ export default function analyze(sourceCode) {
     },
     Statement_for(_for, left, _in, right, body) {
       checkArrayOrIntType(right.rep());
-      return new core.ForStatement(right.rep(), body.rep());
+      if (right.rep().type instanceof core.ArrayType) {
+        const iterator = new core.Variable(
+          left.sourceString,
+          right.rep().type.baseType
+        );
+        context = context.newChildContext({ inLoop: true });
+        context.set(iterator.id, iterator);
+        const block = body.rep();
+        context = context.parent;
+        return new core.ForStatement(iterator, right.rep(), block);
+      } else {
+        const iterator = new core.Variable(
+          left.sourceString,
+          right.rep().type.baseType
+        );
+        context = context.newChildContext({ inLoop: true });
+        context.set(iterator.id, iterator);
+        const block = body.rep();
+        context = context.parent;
+        return new core.ForStatement(iterator, right.sourceString, block);
+      }
     },
     Statement_if(_if1, exp1, body1, _else1, _if2, exp2, body2, _else2, body3) {
       checkBoolType(exp1.rep());
-      return new core.IfStatement(
-        exp1.rep(),
-        body1.rep(),
-        exp2.rep(),
-        body2.rep(),
-        body3.rep()
-      );
+      const elseIfParts =
+        exp2.sourceString.length > 0
+          ? [{ condition: exp2.rep(), body: body2.rep() }]
+          : [];
+      if (body3.sourceString != "") {
+        return new core.IfStatement(
+          exp1.rep(),
+          body1.rep(),
+          elseIfParts,
+          body3.rep()
+        );
+      } else {
+        return new core.IfStatement(exp1.rep(), body1.rep(), elseIfParts);
+      }
     },
     Block(_open, body, _close) {
       return body.rep();
@@ -183,8 +227,10 @@ export default function analyze(sourceCode) {
       return new core.BinaryExpression(op.rep(), left.rep(), right.rep(), BOOL);
     },
     Exp4_binary(left, op, right) {
-      checkNumericType(left.rep());
-      checkNumericType(right.rep());
+      if (!context.function) {
+        checkNumericType(left.rep());
+        checkNumericType(right.rep());
+      }
       return new core.BinaryExpression(
         op.rep(),
         left.rep(),
@@ -193,8 +239,10 @@ export default function analyze(sourceCode) {
       );
     },
     Exp5_binary(left, op, right) {
-      checkNumericType(left.rep());
-      checkNumericType(right.rep());
+      if (!context.function) {
+        checkNumericType(left.rep());
+        checkNumericType(right.rep());
+      }
       return new core.BinaryExpression(
         op.rep(),
         left.rep(),
@@ -216,9 +264,12 @@ export default function analyze(sourceCode) {
       return expression.rep();
     },
     Call(callee, _left, args, _right) {
-      const fun = context.get(callee.sourceString);
-      checkArgsMatch(args.asIteration().children, fun.params);
+      const fun = context.lookup(callee.sourceString);
+      checkArgsMatch(args.asIteration().children, fun.paramsLength);
       return new core.Call(callee.sourceString, args.asIteration().rep());
+    },
+    Exp7_arrayAccess(target, _open, index, _close) {
+      return new core.ArrayAccess(target.rep(), index.rep());
     },
     Array(_left, listOfArgs, _right) {
       return listOfArgs.sourceString;
@@ -230,7 +281,7 @@ export default function analyze(sourceCode) {
       return new core.StringLiteral(text.sourceString);
     },
     id(_one, _two) {
-      const savedId = context.get(this.sourceString);
+      const savedId = context.lookup(this.sourceString);
       return savedId;
     },
     true(_) {
