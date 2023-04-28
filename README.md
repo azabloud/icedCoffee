@@ -11,7 +11,6 @@ icedCoffee is a programming language created to be as simple and powerful as a c
 ## Features
 
 - Statically typed
-- Data structures
 - Variable assignments
 - If statements
 - Loops
