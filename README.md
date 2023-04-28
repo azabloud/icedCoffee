@@ -36,8 +36,6 @@ Multiplication: `17 * 3`
 Division: `80 / 10`
 \
 Exponent: `7^3`
-\
-Modulus: `50 % 4`
 
 ### Operators
 ```
