@@ -148,7 +148,7 @@ func fibonacci(n) -> int {
 - Passing the wrong amount of arguments
 - Using return outside of a function
 
-### Usage
+## Usage
 
 To run from the command line:
 
@@ -165,7 +165,7 @@ Output types:
   optimized produces decorated AST
   js produces the translation of the program to JavaScript
 
-# Example Runs
+### Example Runs
 
 ```
 node src/icedCoffee.js examples/forInExample.icedCoffee analyzed
