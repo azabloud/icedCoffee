@@ -110,13 +110,13 @@ const fixtures = [
     source: `
       array[int] x = [1, 2, 3]
       for num in x {
-        print(num)
+        print(num^2)
       }
     `,
     expected: dedent`
       let x = [1, 2, 3];
       for (const num of x) {
-        console.log(num);
+        console.log((num ** 2));
       }
     `,
   },

@@ -30,7 +30,7 @@ function checkSameType(e1, e2, at) {
 }
 
 function checkNumericType(e, at) {
-  if (e.type != INT && e.type != DOUBLE) {
+  if (e.type != INT && e.type != DOUBLE && !Number.isInteger(e)) {
     error("Int or Double expected", at);
   }
 }
@@ -42,7 +42,9 @@ function checkBoolType(e, at) {
 }
 
 function checkArrayOrIntType(e, at) {
-  if (!(e.type instanceof core.ArrayType || e.type === INT)) {
+  if (
+    !(e.type instanceof core.ArrayType || e.type === INT || Number.isInteger(e))
+  ) {
     error("Expected an Array or Int", at);
   }
 }
@@ -164,10 +166,7 @@ export default function analyze(sourceCode) {
         context = context.parent;
         return new core.ForStatement(iterator, right.rep(), block);
       } else {
-        const iterator = new core.Variable(
-          left.sourceString,
-          right.rep().type.baseType
-        );
+        const iterator = new core.Variable(left.sourceString, "int");
         context = context.newChildContext({ inLoop: true });
         context.set(iterator.id, iterator);
         const block = body.rep();

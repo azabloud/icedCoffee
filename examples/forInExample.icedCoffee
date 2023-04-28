@@ -1,0 +1,17 @@
+array[int] x = [1, 2, 3, 4]
+bool y = false
+int z = 0
+for num in x {
+    print(num^2)
+    y = !y
+    z += num^2
+}
+print("y: ")
+print(y)
+print("z: ")
+print(z)
+
+print("Count from zero to four")
+for num in 5 {
+    print(num)
+}

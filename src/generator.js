@@ -66,8 +66,12 @@ export default function generate(program) {
       output.push(`return ${gen(s.expression)};`);
     },
     BinaryExpression(e) {
-      const op = e.op === "!=" ? "!==" : e.op;
-      return `(${gen(e.left)} ${op} ${gen(e.right)})`;
+      if (e.op == "^") {
+        return `(${gen(e.left)} ** ${gen(e.right)})`;
+      } else {
+        const op = e.op === "!=" ? "!==" : e.op;
+        return `(${gen(e.left)} ${op} ${gen(e.right)})`;
+      }
     },
     UnaryExpression(e) {
       return `(${e.op}${gen(e.operand)})`;

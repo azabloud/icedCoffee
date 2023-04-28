@@ -6,7 +6,7 @@ icedCoffee {
             | id ("=" | "+=" | "-=") Exp		          -- assign
             | print "(" Exp ")"			                  -- print
             | while Exp Block                         -- while
-            | for id in id Block					            -- for
+            | for id in (id | num) Block					    -- for
             | if Exp Block (else if Exp Block)*
               (else Block)?               	  		    -- if
   Block     = "{" Statement+ "}"
