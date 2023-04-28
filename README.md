@@ -164,7 +164,7 @@ Output types:
 
 analyzed produces AST
 
-optimized produces decorated AST
+optimized produces optimized AST
 
 js produces the translation of the program to JavaScript
 
